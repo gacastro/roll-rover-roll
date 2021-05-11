@@ -29,9 +29,21 @@ Here is an example:
 ## Considerations
 While the API has been developed, the following considerations were taken:
 * The input commands from Nasa is a string delimeted by `,`. In other words, needs to respect this format `F,B,R,L,B,F,F,F`.
+* The api's do not have any kind of authentication/authorization mechanism
+* The Rover instance is set as singleton in order to persist its position between requests.
+  * This inevitably forced all other services to be singletons but as they do not maintain state, it's a "safe" configuration
+  * Also decided on the singleton assuming there will **be only one rover NASA operator** meaning one request at a time.
 * The grid is set to be 10x10 in order to see the wrapping functionality in action.
 * Obstacles are distributed as displayed bellow
 
 ![](./grid-and-obstacules.png)
 
 ## Future Improvements
+In order to complete the exercise withing a reasonable amount of time, some tasks were left undone. With more time these are some of the tasks we should achieve:
+* The size of the grid and where obstacles are positioned should be changed via an endpoint. As NASA gathers more intel about the planet it will be required to update the rover with them
+* Secure the API by using Oauth2. This would include integrating an Identity Manager as well.
+* If the API would grow to an extent that we would start using the Coordinates object in more collections, specially if used as a key, we should then have it implement the equality and comparison interfaces
+* As the amount of requests grows we'd have to change the Rover from a singleton because we'd have race conditions.
+* Add a logger to the application for at least non-successful responses. At the moment only the client has the details as to why the API response is not successful.
+* Add an exception handling middleware rather than having a try catch per controller action. Since there is only one action, try catch is enough.
+* Explore other variations the input can have in order to have a more resilient API
